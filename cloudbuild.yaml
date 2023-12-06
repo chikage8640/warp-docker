@@ -5,7 +5,7 @@
    secretEnv: ['USERNAME', 'PASSWORD']
  - name: 'gcr.io/cloud-builders/docker'
    entrypoint: 'bash'
-   args: ['-c', 'docker build --pull --no-cache -t $$USERNAME/warp-docker:latrest .']
+   args: ['-c', 'docker build --pull --no-cache -t $$USERNAME/warp-docker:latest .']
    secretEnv: ['USERNAME']
  - name: 'gcr.io/cloud-builders/docker'
    entrypoint: 'bash'
@@ -13,7 +13,7 @@
    secretEnv: ['USERNAME']
  availableSecrets:
    secretManager:
-   - versionName: projects/$PROJECT_ID/secrets/docker-username/versions/1
-     env: 'PASSWORD'
    - versionName: projects/$PROJECT_ID/secrets/docker-token/versions/1
+     env: 'PASSWORD'
+   - versionName: projects/$PROJECT_ID/secrets/docker-username/versions/1
      env: 'USERNAME'
