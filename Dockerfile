@@ -14,8 +14,6 @@ RUN apt-get update && \
 
 COPY entrypoint.sh /entrypoint.sh
 
-ARG CHASHEBUST=0
-
 # Install warp
 RUN apt-get update && \
     apt-get install -y cloudflare-warp && \
