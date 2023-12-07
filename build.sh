@@ -8,6 +8,6 @@ UBUNTU_CREATED=`docker inspect -f '{{ .Created }}' ubuntu:22.04`
 
 if [[ $APT_UPGRADABLE_LIST == *cloudflare-warp* ] || [$UBUNTU_CREATED == $(date +%Y-%m-%d --date '1 day ago')*]]; then
   # ビルド処理
-  docker build --cache-from $USERNAME/warp-docker:latest --build-arg CHASHEBUST=$(date +%s) -t $USERNAME/warp-docker:latest .
+  docker build --cache-from $USERNAME/warp-docker:latest --build-arg CHASHEBUST=$(date +%s) -t $USERNAME/warp-docker:latest -t $USERNAME/warp-docker:$(date +%Y-%m-%d) .
   docker push -a $USERNAME/warp-docker
 fi
