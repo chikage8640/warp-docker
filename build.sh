@@ -2,7 +2,7 @@
 
 # プルしてアップデートがあるか確認
 docker pull $USERNAME/warp-docker:latest
-APT_UPGRADABLE_LIST=`docker run $USERNAME/warp-docker:latest apt update &> /dev/null && apt list --upgradable`
+APT_UPGRADABLE_LIST=`docker run -it --rm --entrypoint "bash" chikage8640/warp-docker:latest -c "apt update &> /dev/null && apt list --upgradable"`
 docker pull ubuntu:22.04
 UBUNTU_CREATED=`docker inspect -f '{{ .Created }}' ubuntu:22.04` 
 
