@@ -3,8 +3,12 @@
 # プルしてアップデートがあるか確認
 docker pull $USERNAME/cf-warp:latest
 APT_UPGRADABLE_LIST=`docker run --rm --entrypoint "bash" chikage8640/cf-warp:latest -c "apt-get update &> /dev/null && apt list -oApt::Cmd::Disable-Script-Warning=1 --upgradable"`
+echo "----apt upgradable list----"
+echo $APT_UPGRADABLE_LIST
+echo "---------------------------"
 docker pull ubuntu:22.04
 UBUNTU_CREATED=`docker inspect -f '{{ .Created }}' ubuntu:22.04` 
+echo "Ubuntu created date: $UBUNTU_CREATED"
 
 if [[ $APT_UPGRADABLE_LIST == *cloudflare-warp* ]]; then
   echo "cloudflare-warp is upgradable"
