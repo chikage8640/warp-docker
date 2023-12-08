@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # プルしてアップデートがあるか確認
-docker pull $USERNAME/warp-docker:latest
-APT_UPGRADABLE_LIST=`docker run --rm --entrypoint "bash" chikage8640/warp-docker:latest -c "apt update &> /dev/null && apt list --upgradable"`
+docker pull $USERNAME/cf-warp:latest
+APT_UPGRADABLE_LIST=`docker run --rm --entrypoint "bash" chikage8640/cf-warp:latest -c "apt update &> /dev/null && apt list --upgradable"`
 docker pull ubuntu:22.04
 UBUNTU_CREATED=`docker inspect -f '{{ .Created }}' ubuntu:22.04` 
 
@@ -16,8 +16,8 @@ fi
 
 if [[ $APT_UPGRADABLE_LIST == *cloudflare-warp* ]] || [[ $UBUNTU_CREATED == $(date +%Y-%m-%d --date '1 day ago')* ]]; then
   # ビルド処理
-  docker build --cache-from $USERNAME/warp-docker:latest --build-arg CHASHEBUST=$(date +%s) -t $USERNAME/warp-docker:latest -t $USERNAME/warp-docker:$(date +%Y-%m-%d) .
-  docker push -a $USERNAME/warp-docker
+  docker build --cache-from $USERNAME/cf-warp:latest --build-arg CHASHEBUST=$(date +%s) -t $USERNAME/cf-warp:latest -t $USERNAME/cf-warp:$(date +%Y-%m-%d) .
+  docker push -a $USERNAME/cf-warp
 else
   echo "No updates available"
 fi

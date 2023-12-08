@@ -13,7 +13,7 @@ version: '3'
 
 services:
   warp:
-    image: caomingjun/warp
+    image: chikage8640/cf-warp
     container_name: warp
     restart: always
     ports:
