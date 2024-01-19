@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM ubuntu:22.04
+FROM ubuntu:22.04
 
 # install dependencies
 RUN apt-get update && \
@@ -12,10 +12,9 @@ COPY entrypoint.sh /entrypoint.sh
 
 # Install gost
 ARG GOST_VERSION
-RUN if [ $BUILDPLATFORM = "linux/amd64" ]; then GOST_ARCH="amd64"; elif [ $BUILDPLATFORM = "linux/arm64/v8" ]; then GOST_ARCH="armv8"; fi && \
-    curl -LO https://github.com/ginuerzh/gost/releases/download/v$GOST_VERSION/gost-linux-$GOST_ARCH-$GOST_VERSION.gz && \
-    gunzip gost-linux-$GOST_ARCH-$GOST_VERSION.gz && \
-    mv gost-linux-$GOST_ARCH-$GOST_VERSION /usr/bin/gost && \
+RUN curl -LO https://github.com/ginuerzh/gost/releases/download/v$GOST_VERSION/gost-linux-amd64-$GOST_VERSION.gz && \
+    gunzip gost-linux-amd64-$GOST_VERSION.gz && \
+    mv gost-linux-amd64-$GOST_VERSION /usr/bin/gost && \
     chmod +x /usr/bin/gost
 
 ARG CHASHEBUST=0

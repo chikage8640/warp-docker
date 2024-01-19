@@ -30,9 +30,8 @@ fi
 
 if [[ $APT_UPGRADABLE_LIST == *cloudflare-warp* ]] || [ $GOST_LATEST != $GOST_VERSION ] || [ $UBUNTU_HASH != $CF_WARP_HASH ]; then
   # ビルド処理
-  docker buildx create --use --name mybuilder
-  docker buildx inspect --bootstrap
-  docker buildx build --cache-from $USERNAME/cf-warp:latest --push --platform linux/amd64,linux/arm64 --build-arg CHASHEBUST=$(date +%s) --build-arg GOST_VERSION=$GOST_LATEST -t $USERNAME/cf-warp:latest -t $USERNAME/cf-warp:$(date +%Y-%m-%d) .
+  docker build --cache-from $USERNAME/cf-warp:latest --build-arg CHASHEBUST=$(date +%s) --build-arg GOST_VERSION=$GOST_LATEST -t $USERNAME/cf-warp:latest -t $USERNAME/cf-warp:$(date +%Y-%m-%d) .
+  docker push -a $USERNAME/cf-warp
 else
   echo "No updates available"
 fi
