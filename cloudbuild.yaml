@@ -11,7 +11,7 @@ steps:
         docker pull ubuntu:22.04
         docker pull $$USERNAME/cf-warp:latest
         UBUNTU_HASH=`docker inspect -f '{{ index .RootFS.Layers 0 }}' ubuntu:22.04`
-        CF_WARP_HASH=`docker inspect -f '{{ index .RootFS.Layers 0 }}' $USERNAME/cf-warp:latest`
+        CF_WARP_HASH=`docker inspect -f '{{ index .RootFS.Layers 0 }}' $$USERNAME/cf-warp:latest`
         WARP_LATEST=`docker run --rm --entrypoint "bash" chikage8640/cf-warp:latest -c "sudo apt-get update &> /dev/null && apt-cache show cloudflare-warp" | grep -m1 '^Version:' | awk '{print $$2}' | sed 's/-[0-9]*$$//'`
         GOST_LATEST=`curl https://api.github.com/repos/ginuerzh/gost/releases/latest | grep -o '"tag_name": "[^"]*"' | sed -n 's/.*"tag_name": "v\([^"]*\)".*/\1/p'`
         echo "Ubuntu hash: $$UBUNTU_HASH"
