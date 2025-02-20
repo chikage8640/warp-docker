@@ -18,7 +18,7 @@ steps:
         echo "cf-warp hash: $$CF_WARP_HASH"
         echo "Latest gost version: $$GOST_LATEST"
         echo "Latest warp version: $$WARP_LATEST"
-        if [ $$UBUNTU_HASH != $$CF_WARP_HASH ] || [ $$GOST_LATEST != `docker inspect --format '{{ index .Config.Labels "GOST_VERSION" }} /chikage8640/cf-warp:latest'` ] || \[ $$WARP_LATEST != `docker inspect --format '{{ index .Config.Labels "WARP_VERSION" }} /chikage8640/cf-warp:latest'` ] || [ $COMMIT_SHA != `docker inspect --format '{{ index .Config.Labels "COMMIT_SHA" }} /chikage8640/cf-warp:latest'` ]; then
+        if [ $$UBUNTU_HASH != $$CF_WARP_HASH ] || [ $$GOST_LATEST != `docker inspect --format '{{ index .Config.Labels "GOST_VERSION" }}' chikage8640/cf-warp:latest` ] || [ $$WARP_LATEST != `docker inspect --format '{{ index .Config.Labels "WARP_VERSION" }}' chikage8640/cf-warp:latest` ] || [ $COMMIT_SHA != `docker inspect --format '{{ index .Config.Labels "COMMIT_SHA" }}' chikage8640/cf-warp:latest` ]; then
         # ビルド処理
         docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
         docker buildx create --use --name mybuilder
