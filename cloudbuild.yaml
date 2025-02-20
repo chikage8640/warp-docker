@@ -8,16 +8,23 @@ steps:
   args:
       - '-c'
       - |-
+        docker pull ubuntu:22.04
         docker pull $$USERNAME/cf-warp:latest
+        UBUNTU_HASH=`docker inspect -f '{{ index .RootFS.Layers 0 }}' ubuntu:22.04`
+        CF_WARP_HASH=`docker inspect -f '{{ index .RootFS.Layers 0 }}' $USERNAME/cf-warp:latest`
         WARP_LATEST=`docker run --rm --entrypoint "bash" chikage8640/cf-warp:latest -c "sudo apt-get update &> /dev/null && apt-cache show cloudflare-warp" | grep -m1 '^Version:' | awk '{print $$2}' | sed 's/-[0-9]*$$//'`
         GOST_LATEST=`curl https://api.github.com/repos/ginuerzh/gost/releases/latest | grep -o '"tag_name": "[^"]*"' | sed -n 's/.*"tag_name": "v\([^"]*\)".*/\1/p'`
+        echo "Ubuntu hash: $$UBUNTU_HASH"
+        echo "cf-warp hash: $$CF_WARP_HASH"
         echo "Latest gost version: $$GOST_LATEST"
         echo "Latest warp version: $$WARP_LATEST"
-        docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+        if [ $$UBUNTU_HASH != $$CF_WARP_HASH ] || [ $$GOST_LATEST != `docker inspect --format '{{ index .Config.Labels "GOST_VERSION" }} /chikage8640/cf-warp:latest'` ] || \[ $$WARP_LATEST != `docker inspect --format '{{ index .Config.Labels "WARP_VERSION" }} /chikage8640/cf-warp:latest'` ] || [ $COMMIT_SHA != `docker inspect --format '{{ index .Config.Labels "COMMIT_SHA" }} /chikage8640/cf-warp:latest'` ]; then
         # ビルド処理
+        docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
         docker buildx create --use --name mybuilder
         docker buildx inspect --bootstrap
         docker buildx build --cache-from $$USERNAME/cf-warp:latest --push --platform linux/amd64,linux/arm64 --build-arg COMMIT_SHA=$COMMIT_SHA --build-arg WARP_VERSION=$$WARP_LATEST --build-arg GOST_VERSION=$$GOST_LATEST -t $$USERNAME/cf-warp:latest -t $$USERNAME/cf-warp:$$(date +%Y-%m-%d) .
+        fi
   secretEnv: ['USERNAME']
 availableSecrets:
   secretManager:
